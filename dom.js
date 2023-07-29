@@ -14,6 +14,9 @@ function init() {
         modify();
     });
 
+    element = document.getElementById('advancedModifyBtn');
+    element.addEventListener('click', advancedModify);
+
     element = document.getElementById('addBtn');
     element.addEventListener('click', function () {
         add();
@@ -23,6 +26,18 @@ function init() {
     element.addEventListener('click', function () {
         remove();
     });
+
+    element = document.getElementById('safeDeleteBtn');
+    element.addEventListener('click', safeDelete);
+
+    element = document.getElementById('selectorDeleteBtn');
+    element.addEventListener('click', deleteBySelector);
+
+    element = document.getElementById('cloneBtn');
+    element.addEventListener('click', basicClone);
+
+    element = document.getElementById('advancedCloneBtn');
+    element.addEventListener('click', advancedClone);
 }
 
 function walk() {
@@ -111,7 +126,6 @@ function showNode(el, textArea) {
     else {
         throw Error(`clearOutput: textArea is ${textArea}!`);
     }
-    
 }
 
 function clearOutput(textArea) {
@@ -149,34 +163,160 @@ function modify() {
 
 }
 
+function advancedModify() {
+    let h1Element = document.querySelector('h1');
+
+    // Updated h1 text
+    h1Element.innerText = 'DOM Manipulation is Fun!';
+
+    // Update h1 color to a random darkcolor
+    let randomValue = Math.ceil(Math.random() * 6);
+
+    h1Element.style.color = `var(--darkcolor${randomValue})`;
+
+    //  Update p1's class
+    let p1Element = document.querySelector('#p1');
+
+    p1Element.classList.toggle('shmancy');
+}
+
 function add() {
+    //  Get output tag
+    let outputElement = document.querySelector('output');
 
-    let p, em, txt1, txt2, txt3;
+    //  Get form data
+    let nodeType = document.getElementById('node-type').value;
+    let nodeContent = document.getElementById('node-content').value;
 
-    // first we do things the long old-fashioned standard DOM way
-    p = document.createElement('p'); // <p></p>
-    em = document.createElement('em'); // <em></em>
-    txt1 = document.createTextNode('This is a '); // "This is a"
-    txt2 = document.createTextNode('test'); // "test"
-    txt3 = document.createTextNode(' of the DOM'); // " of the DOM"
+    //  Create new node of the specified type with the specified content
+    let newNode;
+    
+    //  If node content is empty, fill with default
+    if (!nodeContent)
+    {
+        let date = new Date();
+        nodeContent = `New ${nodeType} ${date.toLocaleString()}`;
+    }
 
-    p.appendChild(txt1); // <p>This is a</p>
-    em.appendChild(txt2); // <em>test</em>
-    p.appendChild(em); // <p>This is a<em>test</em></p>
-    p.appendChild(txt3); // <p>This is a<em>test</em> of the DOM</p>
+    switch (nodeType) {
+        case 'Text Node':
+            newNode = document.createTextNode(nodeContent);
+            break;
+        case 'Comment':
+            newNode = document.createComment(nodeContent);
+            break;
+        case 'Element':
+            newNode = document.createElement('p');
+            newNode.innerText = nodeContent;
+            break;
+    }
 
-    // go an insert this new copy below the old one
-    let oldP = document.getElementById('p1');
-    oldP.parentNode.insertBefore(p, oldP.nextSibling);
-
-    // Alternative method using innerHTML and insertAdjacentHTML
-    // let oldP = document.getElementById('p1');
-    // oldP.insertAdjacentHTML('afterend', '<p>This is a<em>test</em> of the DOM</p>');
-    // clearly short hands are pretty easy!
+    //  Add new element to the output tag
+    outputElement.appendChild(newNode);
 }
 
 function remove() {
   document.body.removeChild(document.body.lastChild);
+}
+
+function safeDelete() {
+    //  Get last child of the body
+    let lastChild = document.body.lastChild;
+
+    if (lastChild.id == 'controls') {
+        lastChild = lastChild.previousSibling;
+    }
+
+    //  If no child before the controls section exists
+    if (!lastChild)
+    {
+        throw Error("no more nodes to safely delete!");
+    }
+
+    document.body.removeChild(lastChild);
+}
+
+function deleteBySelector() {
+    //  Get selector value
+    let selector = document.getElementById('selectorDeleteField').value;
+
+    let matchingElements = document.querySelectorAll(selector);
+
+    for (const element of matchingElements) {
+        // console.log(element);
+        element.parentNode.removeChild(element);
+    }
+}
+
+function basicClone() {
+    //  Get output tag
+    let outputElement = document.querySelector('output');
+
+    //  Get #p1 element
+    let p1Element = document.getElementById('p1');
+    let clone = p1Element.cloneNode(true);
+
+    //  Remove id from clone
+    clone.removeAttribute('id');
+
+    outputElement.appendChild(clone);
+}
+
+function advancedClone() {
+    //  Get output tag
+    let outputElement = document.querySelector('output');
+
+    if (!outputElement.dataset['numCards'])
+    {
+        outputElement.dataset['numCards'] = 1;
+    } else {
+        outputElement.dataset['numCards']++;
+    }
+
+    let numCards = outputElement.dataset['numCards'];
+
+    //  Get template
+    let template = document.querySelector('#card');
+
+    //  Clone template
+    let newCard = template.content.cloneNode(true);
+
+    //  Set title
+    let title = newCard.querySelector('p');
+    title.innerHTML = `Example Card ${numCards}`;
+
+    //  Set image
+    let images = [
+        {
+            url: '/assets/images/communicator.jpg',
+            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/qa9EuWPsgFU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>'
+        },
+        {
+            url: '/assets/images/enterprise.jpg',
+            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/YGzV2u31o9Q?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>'
+        },
+        {
+            url: '/assets/images/chronicles_logo_small.jpg',
+            credit: 'Photo taken from <a href="https://www.vintagecomputing.com/index.php/archives/354/watch-the-computer-chronicles-online">Vintage Computing</a>'
+        }
+    ]
+
+    let image = newCard.querySelector('img');
+
+    //  Choose a random image from the list
+    let chosenImage = images[Math.floor(Math.random() * images.length)];
+    image.src = chosenImage.url;
+
+    //  Set paragraph text
+    let paragraph = newCard.querySelector('picture + p');
+    paragraph.innerHTML = `Oh yes, lovely - paragraph text. ${chosenImage.credit} And look! <em>More</em> paragraph text.`;
+
+    //  Set link
+    let link = newCard.querySelector('info-card > a');
+    link.href = "#";
+    link.innerText = "Card link";
+
+    outputElement.appendChild(newCard);
 }
 
 window.addEventListener('DOMContentLoaded', init);

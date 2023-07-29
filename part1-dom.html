@@ -60,6 +60,23 @@
             100% {background: #ff9b85;}
         }
 
+        .shmancy {
+            animation-name: fontChange;
+            animation-duration: 5s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            text-align: center;
+        }
+
+        @keyframes fontChange {
+            0% {
+                font-size: 1rem;
+            }
+            100% {
+                font-size: 5rem;
+            }
+        }
+
         textarea {
             box-sizing: border-box;
             display: block;
@@ -67,12 +84,91 @@
             width: 100%;
             resize: none;
         }
+
+        output {
+            display: grid;
+            box-sizing: border-box;
+            background-color: beige;
+            width: 75%;
+            max-height: 50rem;
+            margin: 0 auto;
+            overflow: auto;
+        }
+
+        info-card {
+            /* Info Card Variables */
+            --background-color: lightblue;
+            --picture-border-color: darkblue;
+            --link-color: darkblue;
+            --link-hover-color: darkgoldenrod;
+
+            --margin-size: 2rem;
+            --title-font-size: 2.5rem;
+            --paragraph-font-size: 1.5rem;
+            --link-font-size: 1.2rem;
+
+            --picture-border-size: 2px;
+            /* Info Card Variables */
+
+            display: flex;
+            flex-direction: column;
+            background: var(--background-color);
+            padding: 1rem;
+            margin-block-end: var(--margin-size);
+            margin-inline: var(--margin-size);
+            gap: 1rem;
+            border-radius: 0.5rem;
+            max-width: 60ch;
+            font-family: "Helvetica", sans-serif;
+        }
+
+        info-card:first-of-type {
+            margin-block-start: var(--margin-size);
+        }
+
+        info-card > * {
+            margin: 0;
+        }
+
+        info-card > p:first-of-type {
+            font-size: var(--title-font-size);
+        }
+
+        info-card > picture {
+            box-sizing: border-box;
+            border: var(--picture-border-size) solid var(--picture-border-color);
+            /* max-width: 100%; */
+            display: flex;
+        }
+
+        info-card img {
+            flex: 1;
+            max-width: 100%;
+            object-fit: cover;
+        }
+
+        info-card > p:last-of-type {
+            font-size: var(--paragraph-font-size);
+        }
+
+        info-card a {
+            font-size: var(--link-font-size);
+            text-decoration: none;
+            color: var(--link-color);
+            transition-property: color;
+            transition-duration: 100ms;
+        }
+
+        info-card a:hover {
+            color: var(--link-hover-color);
+        }
     </style>
 </head>
 <body>
 <!-- start of HTML demo -->
 <h1>Vanilla DOM Manipulation</h1>
 <p id="p1">This is a <em>test</em> of the DOM</p>
+<output></output>
 
 <section id="controls">
 <h2>Demos</h2>
@@ -82,8 +178,7 @@
         <label for="walkBtn">Basic Traversal</label>
         <input type="button" id="walkBtn" value="Walk">
         <input type="button" id="advancedWalkBtn" value="Advanced Walk">
-        <textarea></textarea>
-
+        <textarea spellcheck="false"></textarea>
         <!--
             Q1a) Modify the simple walk button example to not use alerts but instead to print out the node information on the page in a <textarea> within this fieldset. Using appropriate spacing or returns, so we can see each step
 
@@ -98,6 +193,7 @@
         <legend>Modify</legend>
         <label for="modifyBtn">Simple Modification</label>
         <input type="button" id="modifyBtn" value="Modify">
+        <input type="button" id="advancedModifyBtn" value="Advanced Modify">
 
         <!--
             Q2) Add a new button "Advanced Modify" that does the following:
@@ -110,6 +206,15 @@
     <fieldset>
         <legend>Add</legend>
         <label for="addBtn">Basic Addition</label>
+        <label for="node-type">Node Type</label>
+        <select id="node-type">
+           <option value="Text Node">Text Node</option> 
+           <option value="Comment">Comment</option> 
+           <option value="Element">Element</option> 
+        </select>
+        <label for="node-content">Node Content</label>
+        <input type="text" id="node-content">
+
         <input type="button" id="addBtn" value="Add">
 
         <!--
@@ -122,6 +227,11 @@
         <legend>Remove</legend>
         <label for="removeBtn">Simple Delete</label>
         <input type="button" id="removeBtn" value="Remove">
+        <label for="safeDeleteBtn">Safe Delete</label>
+        <input type="button" id="safeDeleteBtn" value="Safe Delete">
+        <label for="selectorDeleteField">Delete by Selector</label>
+        <input type="text" id="selectorDeleteField">
+        <input type="button" id="selectorDeleteBtn" value="Delete elements that match selector">
         <!--
 
           Q4a) Safe Delete
@@ -134,6 +244,10 @@
 
     <fieldset>
         <legend>Clone</legend>
+        <label for="cloneBtn">Basic Clone</label>
+        <input type="button" id="cloneBtn" value="Basic Clone">
+        <label for="advancedCloneBtn">Advanced Clone</label>
+        <input type="button" id="advancedCloneBtn" value="Advanced Clone">
         <!--
           Q5a) Add a button "Basic Clone" that clones the p tag and adds it to the DOM.  You can add it to the same area you added new content.  Be cautious with your cloning to modify attributes
 
@@ -152,5 +266,15 @@
 
 <!-- put all your new code in this dom.js file -->
 <script src="dom.js"></script>
+<template id="card">
+    <info-card>
+        <p></p>
+        <picture>
+            <img>
+        </picture>
+        <p></p>
+        <a></a>
+    </info-card>
+</template>
 </body>
 </html>
