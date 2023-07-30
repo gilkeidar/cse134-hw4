@@ -130,7 +130,7 @@ function showNode(el, textArea) {
 
 function clearOutput(textArea) {
 
-    // Wipe text area contents
+    //  Wipe text area contents
     if (textArea)
     {
         textArea.innerHTML = '';
