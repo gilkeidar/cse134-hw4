@@ -77,15 +77,14 @@ function advancedWalk() {
 }
 
 function treeDFS(node, textArea, level) {
-    printNode(node, level, textArea);
+    printNode(node, textArea, level);
 
-    // for (const child of node.childNodes) {
     for (const child of node.children) {
         treeDFS(child, textArea, level + 1);
     }
 }
 
-function printNode(node, level, textArea) {
+function printNode(node, textArea, level) {
     let nodeName = node.nodeName;
     
     let message = '';
@@ -118,9 +117,8 @@ function showNode(el, textArea) {
     let nodeName = el.nodeName;
     let nodeValue = el.nodeValue;
 
-    
     if (textArea) {
-        //  Print information into the textarea field
+        //  Print information into the textarea
         textArea.innerHTML += `Node type: ${nodeType}\nNode name: ${nodeName}\nNode value: ${nodeValue}\n-----\n`;
     }
     else {
@@ -166,10 +164,10 @@ function modify() {
 function advancedModify() {
     let h1Element = document.querySelector('h1');
 
-    // Updated h1 text
+    //  Update h1 text
     h1Element.innerText = 'DOM Manipulation is Fun!';
 
-    // Update h1 color to a random darkcolor
+    //  Update h1 color to a random darkcolor
     let randomValue = Math.ceil(Math.random() * 6);
 
     h1Element.style.color = `var(--darkcolor${randomValue})`;
@@ -188,32 +186,103 @@ function add() {
     let nodeType = document.getElementById('node-type').value;
     let nodeContent = document.getElementById('node-content').value;
 
-    //  Create new node of the specified type with the specified content
-    let newNode;
-    
-    //  If node content is empty, fill with default
-    if (!nodeContent)
-    {
-        let date = new Date();
-        nodeContent = `New ${nodeType} ${date.toLocaleString()}`;
-    }
+    let newNode, date;
 
-    switch (nodeType) {
-        case 'Text Node':
+    if (nodeType == 'Element') {
+        //  Node content must be a valid element name - check using the DOM Parser
+        //  Idea from this Stack Overflow answer: https://stackoverflow.com/questions/15458876/check-if-a-string-is-html-or-not#answer-15458968
+
+        //  Create a DOMParser
+        let domParser = new DOMParser();
+
+        //  Create an HTML document with only this element
+        let htmlWithElement = domParser.parseFromString(`<${nodeContent}>`, 'text/html');
+
+        //  Get this element (document --> html --> body --> element)
+        let newElement = htmlWithElement.firstChild.lastChild.firstChild;
+
+        if (HTMLUnknownElement.prototype.isPrototypeOf(newElement)) {
+            //  Element is unknown - throw an error!
+            throw Error(`add: Unknown element ${nodeContent}!`);
+        }
+
+        //  Element is valid, so create it
+        newNode = document.createElement(nodeContent);
+
+        //  Fill element with default text
+        date = new Date();
+
+        newNode.innerText = `New Element ${date.toLocaleString()}`;
+    }
+    else {
+        //  If node content is empty, add an empty string
+        date = new Date();
+
+        if (!nodeContent) {
+            nodeContent = `New ${nodeType} ${date.toLocaleString()}`;
+        }
+
+        //  Create new Text Node or Comment
+        if (nodeType == 'Text Node') {
             newNode = document.createTextNode(nodeContent);
-            break;
-        case 'Comment':
+        }
+        else {
+            //  Create a comment
             newNode = document.createComment(nodeContent);
-            break;
-        case 'Element':
-            newNode = document.createElement('p');
-            newNode.innerText = nodeContent;
-            break;
+        }
     }
 
     //  Add new element to the output tag
     outputElement.appendChild(newNode);
 }
+
+// function add() {
+//     //  Get output tag
+//     let outputElement = document.querySelector('output');
+
+//     //  Get form data
+//     let nodeType = document.getElementById('node-type').value;
+//     let nodeContent = document.getElementById('node-content').value;
+
+//     //  Create new node of the specified type with the specified content
+//     let newNode;
+//     let tagType;
+
+//     if (!nodeContent && nodeType == 'Element') {
+//         //  Node type is an element, but not tag type was specified
+//         throw Error('add: Must specify a tag type if creating an element!');
+//     }
+//     else if (nodeType == 'Element') {
+//         //  Specify tag type for element
+//         tagType = nodeContent;
+
+//         //  Empty out nodeContent
+//         nodeContent = '';
+//     }
+    
+//     if (!nodeContent)
+//     {
+//         //  If node content is empty, fill with default
+//         let date = new Date();
+//         nodeContent = `New ${nodeType} ${date.toLocaleString()}`;
+//     }
+
+//     switch (nodeType) {
+//         case 'Text Node':
+//             newNode = document.createTextNode(nodeContent);
+//             break;
+//         case 'Comment':
+//             newNode = document.createComment(nodeContent);
+//             break;
+//         case 'Element':
+//             newNode = document.createElement('p');
+//             newNode.innerText = nodeContent;
+//             break;
+//     }
+
+//     //  Add new element to the output tag
+//     outputElement.appendChild(newNode);
+// }
 
 function remove() {
   document.body.removeChild(document.body.lastChild);
@@ -304,7 +373,7 @@ function advancedClone() {
     let image = newCard.querySelector('img');
 
     //  Choose a random image from the list
-    let chosenImage = images[Math.floor(Math.random() * images.length)];
+    let chosenImage = images[Math.floor(Math.random() * (images.length))];
     image.src = chosenImage.url;
 
     //  Set paragraph text
