@@ -236,54 +236,6 @@ function add() {
     outputElement.appendChild(newNode);
 }
 
-// function add() {
-//     //  Get output tag
-//     let outputElement = document.querySelector('output');
-
-//     //  Get form data
-//     let nodeType = document.getElementById('node-type').value;
-//     let nodeContent = document.getElementById('node-content').value;
-
-//     //  Create new node of the specified type with the specified content
-//     let newNode;
-//     let tagType;
-
-//     if (!nodeContent && nodeType == 'Element') {
-//         //  Node type is an element, but not tag type was specified
-//         throw Error('add: Must specify a tag type if creating an element!');
-//     }
-//     else if (nodeType == 'Element') {
-//         //  Specify tag type for element
-//         tagType = nodeContent;
-
-//         //  Empty out nodeContent
-//         nodeContent = '';
-//     }
-    
-//     if (!nodeContent)
-//     {
-//         //  If node content is empty, fill with default
-//         let date = new Date();
-//         nodeContent = `New ${nodeType} ${date.toLocaleString()}`;
-//     }
-
-//     switch (nodeType) {
-//         case 'Text Node':
-//             newNode = document.createTextNode(nodeContent);
-//             break;
-//         case 'Comment':
-//             newNode = document.createComment(nodeContent);
-//             break;
-//         case 'Element':
-//             newNode = document.createElement('p');
-//             newNode.innerText = nodeContent;
-//             break;
-//     }
-
-//     //  Add new element to the output tag
-//     outputElement.appendChild(newNode);
-// }
-
 function remove() {
   document.body.removeChild(document.body.lastChild);
 }
