@@ -310,15 +310,18 @@ function advancedClone() {
     let images = [
         {
             url: '/assets/images/communicator.jpg',
-            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/qa9EuWPsgFU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>'
+            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/qa9EuWPsgFU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>',
+            alt: 'A 23rd Century Starfleet communicator as seen in Star Trek: The Original Series'
         },
         {
             url: '/assets/images/enterprise.jpg',
-            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/YGzV2u31o9Q?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>'
+            credit: 'Photo by <a href="https://unsplash.com/@stefanbc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Stefan Cosma</a> on <a href="https://unsplash.com/photos/YGzV2u31o9Q?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>',
+            alt: 'A small plastic model of the U.S.S. Enterprise as seen in Star Trek: The Original Series'
         },
         {
             url: '/assets/images/chronicles_logo_small.jpg',
-            credit: 'Photo taken from <a href="https://www.vintagecomputing.com/index.php/archives/354/watch-the-computer-chronicles-online">Vintage Computing</a>'
+            credit: 'Photo taken from <a href="https://www.vintagecomputing.com/index.php/archives/354/watch-the-computer-chronicles-online">Vintage Computing</a>',
+            alt: 'Logo of The Computer Chronicles (1983 to 1989)'
         }
     ]
 
@@ -327,6 +330,7 @@ function advancedClone() {
     //  Choose a random image from the list
     let chosenImage = images[Math.floor(Math.random() * (images.length))];
     image.src = chosenImage.url;
+    image.alt = chosenImage.alt;
 
     //  Set paragraph text
     let paragraph = newCard.querySelector('picture + p');
